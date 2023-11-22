@@ -56,7 +56,7 @@ public final class SimulationMenuView extends JFrame {
         return Integer.parseInt(atmsNumberField.getText());
     }
 
-    public void addStartListener(ActionListener listener) {
+    public void addStartButtonListener(ActionListener listener) {
         startButton.addActionListener(listener);
     }
 
