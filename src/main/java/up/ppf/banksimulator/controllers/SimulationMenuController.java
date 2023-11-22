@@ -1,7 +1,8 @@
 package up.ppf.banksimulator.controllers;
 
-import up.ppf.banksimulator.ExecutiveAgent;
+import up.ppf.banksimulator.agents.ExecutiveAgent;
 import up.ppf.banksimulator.models.ExecutiveModel;
+import up.ppf.banksimulator.models.GeneralStateTableModel;
 import up.ppf.banksimulator.views.GeneralStateTableView;
 import up.ppf.banksimulator.views.SimulationMenuView;
 
@@ -13,11 +14,12 @@ public final class SimulationMenuController {
         view.addStartButtonListener((e) -> {
             try {
                 var executives = new ArrayList<ExecutiveAgent>();
-                for (int i = 0; i <= view.getExecutivesNumber(); i++) {
+                for (int i = 0; i < view.getExecutivesNumber(); i++) {
                     executives.add(new ExecutiveAgent(new ExecutiveModel(ExecutiveModel.ExecutiveState.IDLE)));
                     executives.get(i).start();
                 }
-                SwingUtilities.invokeLater(() -> new GeneralStateTableController(new GeneralStateTableView(), executives));
+                var model = new GeneralStateTableModel(executives);
+                SwingUtilities.invokeLater(() -> new GeneralStateTableController(new GeneralStateTableView(), model));
             } catch (NumberFormatException ex) {
                 view.displayErrorMessage("Invalid input. Please enter valid numbers.");
             }

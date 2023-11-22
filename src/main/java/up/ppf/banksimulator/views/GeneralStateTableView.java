@@ -13,6 +13,7 @@ public class GeneralStateTableView extends JFrame {
     private final JButton clientsDetailedButton;
     private final JButton atmsDetailedButton;
     private final JButton executivesDetailedButton;
+    private DefaultTableModel tableModel;
 
     public GeneralStateTableView() {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -45,7 +46,7 @@ public class GeneralStateTableView extends JFrame {
 
     private JScrollPane getGeneralAgentTable(String agentTypeName, @NotNull Iterable<String> stateNames) {
         var columnNames = new String[]{"State", "Count/Total"};
-        var tableModel = new DefaultTableModel(columnNames, 0);
+        tableModel = new DefaultTableModel(columnNames, 0);
         stateNames.forEach(stateName -> tableModel.addRow(new String[]{stateName, "0/0"}));
         var scrollPane = new JScrollPane(new JTable(tableModel));
         scrollPane.setBorder(BorderFactory.createTitledBorder(agentTypeName + "s"));
@@ -62,5 +63,8 @@ public class GeneralStateTableView extends JFrame {
 
     public void setExecutivesDetailedButtonListener(ActionListener listener) {
         executivesDetailedButton.addActionListener(listener);
+    }
+    public DefaultTableModel getTableModel(){
+        return tableModel;
     }
 }

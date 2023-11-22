@@ -1,4 +1,4 @@
-package up.ppf.banksimulator;
+package up.ppf.banksimulator.agents;
 
 import up.ppf.banksimulator.models.ExecutiveModel;
 
@@ -7,6 +7,10 @@ public class ExecutiveAgent extends Thread {
 
     public ExecutiveAgent(ExecutiveModel model) {
         this.model = model;
+    }
+
+    public ExecutiveModel getModel() {
+        return model;
     }
 
     @Override
