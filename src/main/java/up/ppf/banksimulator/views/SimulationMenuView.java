@@ -10,6 +10,8 @@ public final class SimulationMenuView extends JFrame {
     private final JTextField clientsNumberField;
     private final JTextField executivesNumberField;
     private final JTextField atmsNumberField;
+    private final JTextField atmsLineField;
+    private final JTextField executivesLineField;
     private final JButton startButton;
 
     public SimulationMenuView() {
@@ -17,15 +19,19 @@ public final class SimulationMenuView extends JFrame {
         setTitle(Main.TITLE);
         setSize(400, 200);
 
-        var panel = new JPanel(new GridLayout(3, 2));
-
         // INPUT PARAMETERS FOR SIMULATION
         var clientsLabel = new JLabel("Number of Clients:");
-        clientsNumberField = new JTextField();
+        clientsNumberField = new JTextField("5");
         var executivesLabel = new JLabel("Number of Executives:");
-        executivesNumberField = new JTextField();
+        executivesNumberField = new JTextField("5");
         var atmsLabel = new JLabel("Number of ATMs:");
-        atmsNumberField = new JTextField();
+        atmsNumberField = new JTextField("5");
+        var atmsLineLabel = new JLabel("ATMs line size:");
+        atmsLineField = new JTextField("10");
+        var executivesLineLabel = new JLabel("Executives line size:");
+        executivesLineField = new JTextField("10");
+
+        var panel = new JPanel(new GridLayout(5, 2));
 
         panel.add(clientsLabel);
         panel.add(clientsNumberField);
@@ -33,6 +39,10 @@ public final class SimulationMenuView extends JFrame {
         panel.add(executivesNumberField);
         panel.add(atmsLabel);
         panel.add(atmsNumberField);
+        panel.add(atmsLineLabel);
+        panel.add(atmsLineField);
+        panel.add(executivesLineLabel);
+        panel.add(executivesLineField);
 
         startButton = new JButton("Start Simulation");
 
@@ -54,6 +64,14 @@ public final class SimulationMenuView extends JFrame {
 
     public int getAtmsNumber() throws NumberFormatException {
         return Integer.parseInt(atmsNumberField.getText());
+    }
+
+    public int getAtmsLineCapacity() throws NumberFormatException {
+        return Integer.parseInt(atmsLineField.getText());
+    }
+
+    public int getExecutivesLineCapacity() throws NumberFormatException {
+        return Integer.parseInt(executivesLineField.getText());
     }
 
     public void addStartButtonListener(ActionListener listener) {

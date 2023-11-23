@@ -1,25 +1,18 @@
 package up.ppf.banksimulator.controllers;
 
-import up.ppf.banksimulator.agents.ExecutiveAgent;
-import up.ppf.banksimulator.models.ExecutiveModel;
 import up.ppf.banksimulator.models.GeneralStateTableModel;
 import up.ppf.banksimulator.views.GeneralStateTableView;
 import up.ppf.banksimulator.views.SimulationMenuView;
 
 import javax.swing.*;
-import java.util.ArrayList;
 
 public final class SimulationMenuController {
     public SimulationMenuController(SimulationMenuView view) {
         view.addStartButtonListener((e) -> {
             try {
-                var executives = new ArrayList<ExecutiveAgent>();
-                for (int i = 0; i < view.getExecutivesNumber(); i++) {
-                    executives.add(new ExecutiveAgent(new ExecutiveModel(ExecutiveModel.ExecutiveState.IDLE)));
-                    executives.get(i).start();
-                }
-                var model = new GeneralStateTableModel(executives);
+                var model = new GeneralStateTableModel(view.getExecutivesNumber(), view.getAtmsNumber(), view.getClientsNumber());
                 SwingUtilities.invokeLater(() -> new GeneralStateTableController(new GeneralStateTableView(), model));
+
             } catch (NumberFormatException ex) {
                 view.displayErrorMessage("Invalid input. Please enter valid numbers.");
             }
