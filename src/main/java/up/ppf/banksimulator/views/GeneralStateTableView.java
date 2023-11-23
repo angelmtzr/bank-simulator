@@ -2,9 +2,11 @@ package up.ppf.banksimulator.views;
 
 import org.jetbrains.annotations.NotNull;
 import up.ppf.banksimulator.Main;
+import up.ppf.banksimulator.models.ExecutiveFractionsModel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
@@ -13,7 +15,9 @@ public class GeneralStateTableView extends JFrame {
     private final JButton clientsDetailedButton;
     private final JButton atmsDetailedButton;
     private final JButton executivesDetailedButton;
-    private DefaultTableModel tableModel;
+    private final TableModel clientsTableModel;
+    private final TableModel atmsTableModel;
+    private final TableModel executivesTableModel;
 
     public GeneralStateTableView() {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -22,32 +26,33 @@ public class GeneralStateTableView extends JFrame {
         setLayout(new GridLayout(3, 2));
 
         // TABLE CONFIGURATION
-        var clientTable = getGeneralAgentTable("Client",
-                Arrays.asList("Bank Entrance", "ATM Line", "Executive Line", "ATM", "Executive"));
+        clientsTableModel = getTableModel(Arrays.asList("Bank Entrance", "ATM Line", "Executive Line", "ATM", "Executive", "Exited"));
         clientsDetailedButton = new JButton("Clients Detailed");
 
-        var atmTable = getGeneralAgentTable("ATM",
-                Arrays.asList("Available", "Occupied", "Out Of Order"));
+        atmsTableModel = getTableModel(Arrays.asList("Available", "Occupied", "Out Of Order"));
         atmsDetailedButton = new JButton("ATMs Detailed");
 
-        var executiveTable = getGeneralAgentTable("Executive",
-                Arrays.asList("Idle", "Busy", "On Brake"));
+        executivesTableModel = getTableModel(Arrays.asList("Idle", "Busy", "Taking A Break"));
         executivesDetailedButton = new JButton("Executives Detailed");
 
-        add(clientTable);
+        add(getScrollPane("Client", clientsTableModel));
         add(clientsDetailedButton);
-        add(atmTable);
+        add(getScrollPane("Atm", atmsTableModel));
         add(atmsDetailedButton);
-        add(executiveTable);
+        add(getScrollPane("Executive", executivesTableModel));
         add(executivesDetailedButton);
 
         setVisible(true);
     }
 
-    private JScrollPane getGeneralAgentTable(String agentTypeName, @NotNull Iterable<String> stateNames) {
+    private TableModel getTableModel(@NotNull Iterable<String> stateNames) {
         var columnNames = new String[]{"State", "Count/Total"};
-        tableModel = new DefaultTableModel(columnNames, 0);
+        var tableModel = new DefaultTableModel(columnNames, 0);
         stateNames.forEach(stateName -> tableModel.addRow(new String[]{stateName, "0/0"}));
+        return tableModel;
+    }
+
+    private JScrollPane getScrollPane(String agentTypeName, TableModel tableModel) {
         var scrollPane = new JScrollPane(new JTable(tableModel));
         scrollPane.setBorder(BorderFactory.createTitledBorder(agentTypeName + "s"));
         return scrollPane;
@@ -64,7 +69,25 @@ public class GeneralStateTableView extends JFrame {
     public void setExecutivesDetailedButtonListener(ActionListener listener) {
         executivesDetailedButton.addActionListener(listener);
     }
-    public DefaultTableModel getTableModel(){
-        return tableModel;
+
+    public void setExecutiveFractions(ExecutiveFractionsModel model) {
+        executivesTableModel.setValueAt(model.getIdleFraction(), 0, 1);
+        executivesTableModel.setValueAt(model.getBusyFraction(), 1, 1);
+        executivesTableModel.setValueAt(model.getTakingBreakFraction(), 2, 1);
+    }
+
+    public void setAtmsFractions(AtmFractionsModel model) {
+        atmsTableModel.setValueAt(model.getAvailableFraction(), 0, 1);
+        atmsTableModel.setValueAt(model.getOccupiedFraction(), 1, 1);
+        atmsTableModel.setValueAt(model.getOutOfOrderFraction(), 2, 1);
+    }
+
+    public void setClientsFractions(ClientFractionsModel model) {
+        clientsTableModel.setValueAt(model.getEntranceFraction(), 0, 1);
+        clientsTableModel.setValueAt(model.getAtmLineFraction(), 1, 1);
+        clientsTableModel.setValueAt(model.getExecutiveLineFraction(), 2, 1);
+        clientsTableModel.setValueAt(model.getAtmFraction(), 3, 1);
+        clientsTableModel.setValueAt(model.getExecutiveFraction(), 4, 1);
+        clientsTableModel.setValueAt(model.getExitedFraction(), 5, 1);
     }
 }

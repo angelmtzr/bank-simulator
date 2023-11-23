@@ -1,6 +1,5 @@
 package up.ppf.banksimulator.controllers;
 
-import up.ppf.banksimulator.models.ExecutiveModel;
 import up.ppf.banksimulator.models.GeneralStateTableModel;
 import up.ppf.banksimulator.views.DetailedStateTableView;
 import up.ppf.banksimulator.views.GeneralStateTableView;
@@ -13,9 +12,10 @@ public final class GeneralStateTableController {
     public GeneralStateTableController(GeneralStateTableView view, GeneralStateTableModel model) {
         var executor = Executors.newScheduledThreadPool(model.getExecutives().size());
         executor.scheduleAtFixedRate(() -> {
-            view.getTableModel().setValueAt(model.getExecutivesFraction(ExecutiveModel.ExecutiveState.IDLE), 0, 1);
-            view.getTableModel().setValueAt(model.getExecutivesFraction(ExecutiveModel.ExecutiveState.BUSY), 1, 1);
-            view.getTableModel().setValueAt(model.getExecutivesFraction(ExecutiveModel.ExecutiveState.TAKING_A_BREAK), 2, 1);
+            view.setExecutiveFractions(model.getExecutiveFractions());
+            view.setAtmsFractions(model.getAtmFractions());
+            view.setClientsFractions(model.getClientFractions());
+
         }, 0, 500, TimeUnit.MILLISECONDS);
         view.setClientsDetailedButtonListener((e) -> SwingUtilities.invokeLater(() -> new DetailedStateTableView(
                 "Client",
