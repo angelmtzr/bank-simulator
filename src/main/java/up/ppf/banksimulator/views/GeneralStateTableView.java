@@ -2,7 +2,9 @@ package up.ppf.banksimulator.views;
 
 import org.jetbrains.annotations.NotNull;
 import up.ppf.banksimulator.Main;
-import up.ppf.banksimulator.models.ExecutiveFractionsModel;
+import up.ppf.banksimulator.models.fractions.AtmFractionsModel;
+import up.ppf.banksimulator.models.fractions.ClientFractionsModel;
+import up.ppf.banksimulator.models.fractions.ExecutiveFractionsModel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -19,14 +21,18 @@ public class GeneralStateTableView extends JFrame {
     private final TableModel atmsTableModel;
     private final TableModel executivesTableModel;
 
-    public GeneralStateTableView() {
+    public GeneralStateTableView(int atmLineSize, int executivesLineSize) {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle(Main.TITLE);
-        setSize(400, 500);
+        setSize(500, 500);
         setLayout(new GridLayout(3, 2));
 
         // TABLE CONFIGURATION
-        clientsTableModel = getTableModel(Arrays.asList("Bank Entrance", "ATM Line", "Executive Line", "ATM", "Executive", "Exited"));
+        clientsTableModel = getTableModel(
+                Arrays.asList("Bank Entrance",
+                        "ATM Line (" + atmLineSize + ")",
+                        "Executive Line (" + executivesLineSize + ")",
+                        "ATM", "Executive", "Exited"));
         clientsDetailedButton = new JButton("Clients Detailed");
 
         atmsTableModel = getTableModel(Arrays.asList("Available", "Occupied", "Out Of Order"));

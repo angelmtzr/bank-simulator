@@ -1,5 +1,6 @@
 package up.ppf.banksimulator.views;
 
+import up.ppf.banksimulator.GeneralStateTableParamsModel;
 import up.ppf.banksimulator.Main;
 
 import javax.swing.*;
@@ -54,24 +55,29 @@ public final class SimulationMenuView extends JFrame {
         setVisible(true);
     }
 
-    public int getClientsNumber() throws NumberFormatException {
+    private int getClientsNumber() throws NumberFormatException {
         return Integer.parseInt(clientsNumberField.getText());
     }
 
-    public int getExecutivesNumber() throws NumberFormatException {
+    private int getExecutivesNumber() throws NumberFormatException {
         return Integer.parseInt(executivesNumberField.getText());
     }
 
-    public int getAtmsNumber() throws NumberFormatException {
+    private int getAtmsNumber() throws NumberFormatException {
         return Integer.parseInt(atmsNumberField.getText());
     }
 
-    public int getAtmsLineCapacity() throws NumberFormatException {
+    private int getAtmsLineCapacity() throws NumberFormatException {
         return Integer.parseInt(atmsLineField.getText());
     }
 
-    public int getExecutivesLineCapacity() throws NumberFormatException {
+    private int getExecutivesLineCapacity() throws NumberFormatException {
         return Integer.parseInt(executivesLineField.getText());
+    }
+
+    public GeneralStateTableParamsModel getParams() {
+        return new GeneralStateTableParamsModel(getClientsNumber(), getAtmsNumber(),
+                getExecutivesNumber(), getAtmsLineCapacity(), getExecutivesLineCapacity());
     }
 
     public void addStartButtonListener(ActionListener listener) {

@@ -1,4 +1,4 @@
-package up.ppf.banksimulator.views;
+package up.ppf.banksimulator.models.fractions;
 
 public class ClientFractionsModel {
 

@@ -1,11 +1,11 @@
-package up.ppf.banksimulator.agents;
+package up.ppf.banksimulator.buffers;
 
 import java.util.concurrent.Semaphore;
 
-public class AtmLine {
+public class Line {
     private final Semaphore available;
 
-    public AtmLine(int capacity) {
+    public Line(int capacity) {
         available = new Semaphore(capacity, true);
     }
 

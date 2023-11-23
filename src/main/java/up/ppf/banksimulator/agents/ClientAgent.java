@@ -46,7 +46,7 @@ public class ClientAgent extends Thread {
 
     @Override
     public void run() {
-        while (true) {
+        while (model.getState() != ClientModel.ClientState.EXITED) {
             goToSleep(2000);
             model.setState(ClientModel.ClientState.random());
         }

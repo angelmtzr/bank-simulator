@@ -10,8 +10,11 @@ public final class SimulationMenuController {
     public SimulationMenuController(SimulationMenuView view) {
         view.addStartButtonListener((e) -> {
             try {
-                var model = new GeneralStateTableModel(view.getExecutivesNumber(), view.getAtmsNumber(), view.getClientsNumber());
-                SwingUtilities.invokeLater(() -> new GeneralStateTableController(new GeneralStateTableView(), model));
+                var stateModel = new GeneralStateTableModel(view.getParams());
+                var stateView = new GeneralStateTableView(
+                        view.getParams().getAtmsLineSize(),
+                        view.getParams().getExecutivesLineSize());
+                SwingUtilities.invokeLater(() -> new GeneralStateTableController(stateView, stateModel));
 
             } catch (NumberFormatException ex) {
                 view.displayErrorMessage("Invalid input. Please enter valid numbers.");

@@ -1,4 +1,4 @@
-package up.ppf.banksimulator.models;
+package up.ppf.banksimulator.models.fractions;
 
 public class ExecutiveFractionsModel {
     private String idleFraction;

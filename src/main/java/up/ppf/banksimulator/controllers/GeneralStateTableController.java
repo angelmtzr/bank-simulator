@@ -10,13 +10,12 @@ import java.util.concurrent.TimeUnit;
 
 public final class GeneralStateTableController {
     public GeneralStateTableController(GeneralStateTableView view, GeneralStateTableModel model) {
-        var executor = Executors.newScheduledThreadPool(model.getExecutives().size());
-        executor.scheduleAtFixedRate(() -> {
+        Executors.newScheduledThreadPool(3).scheduleAtFixedRate(() -> {
             view.setExecutiveFractions(model.getExecutiveFractions());
             view.setAtmsFractions(model.getAtmFractions());
             view.setClientsFractions(model.getClientFractions());
-
         }, 0, 500, TimeUnit.MILLISECONDS);
+
         view.setClientsDetailedButtonListener((e) -> SwingUtilities.invokeLater(() -> new DetailedStateTableView(
                 "Client",
                 new String[]{"ID", "Bank Entrance", "ATM Line", "Executive Line", "ATM", "Executive", "Exited"})));

@@ -1,83 +1,60 @@
 package up.ppf.banksimulator.models;
 
+import up.ppf.banksimulator.Bank;
+import up.ppf.banksimulator.GeneralStateTableParamsModel;
 import up.ppf.banksimulator.agents.AtmAgent;
 import up.ppf.banksimulator.agents.ClientAgent;
 import up.ppf.banksimulator.agents.ExecutiveAgent;
-import up.ppf.banksimulator.views.AtmFractionsModel;
-import up.ppf.banksimulator.views.ClientFractionsModel;
+import up.ppf.banksimulator.buffers.Line;
+import up.ppf.banksimulator.models.fractions.AtmFractionsModel;
+import up.ppf.banksimulator.models.fractions.ClientFractionsModel;
+import up.ppf.banksimulator.models.fractions.ExecutiveFractionsModel;
 
 import java.util.ArrayList;
 
 public class GeneralStateTableModel {
-    private final ArrayList<ExecutiveAgent> executives = new ArrayList<>();
-    private final ArrayList<AtmAgent> atms = new ArrayList<>();
-    private final ArrayList<ClientAgent> clients = new ArrayList<>();
+    private final Bank bank;
 
-    public GeneralStateTableModel(int nExecutives, int nAtms, int nClients) {
-        setExecutives(nExecutives);
-        setAtms(nAtms);
-        setClients(nClients);
-
+    public GeneralStateTableModel(GeneralStateTableParamsModel params) {
+        bank = new Bank(new Line(params.getAtmsLineSize()), new Line(params.getExecutivesLineSize()),
+                createClients(params.getClientsNumber()),
+                createAtms(params.getAtmsNumber()),
+                createExecutives(params.getExecutiveNumber()));
     }
 
-    private void setExecutives(int nExecutives) {
-        for (int i = 0; i < nExecutives; i++) {
-            executives.add(new ExecutiveAgent(new ExecutiveModel(ExecutiveModel.ExecutiveState.IDLE)));
-            executives.get(i).start();
-        }
-    }
-
-    private void setAtms(int nAtms) {
-        for (int i = 0; i < nAtms; i++) {
-            atms.add(new AtmAgent(new AtmModel(AtmModel.AtmState.AVAILABLE)));
-            atms.get(i).start();
-        }
-    }
-
-    private void setClients(int nClients) {
+    private ArrayList<ClientAgent> createClients(int nClients) {
+        var clients = new ArrayList<ClientAgent>();
         for (int i = 0; i < nClients; i++) {
             clients.add(new ClientAgent(new ClientModel(ClientModel.ClientState.BANK_ENTRANCE)));
             clients.get(i).start();
         }
+        return clients;
     }
 
-    public ArrayList<ExecutiveAgent> getExecutives() {
+    private ArrayList<AtmAgent> createAtms(int nAtms) {
+        var atms = new ArrayList<AtmAgent>();
+        for (int i = 0; i < nAtms; i++) {
+            atms.add(new AtmAgent(new AtmModel(AtmModel.AtmState.AVAILABLE)));
+            atms.get(i).start();
+        }
+        return atms;
+    }
+
+    private ArrayList<ExecutiveAgent> createExecutives(int nExecutives) {
+        var executives = new ArrayList<ExecutiveAgent>();
+        for (int i = 0; i < nExecutives; i++) {
+            executives.add(new ExecutiveAgent(new ExecutiveModel(ExecutiveModel.ExecutiveState.IDLE)));
+            executives.get(i).start();
+        }
         return executives;
     }
 
-    private String getExecutivesFraction(ExecutiveModel.ExecutiveState state) {
-        return executives.stream()
-                .filter(executiveAgent -> executiveAgent.getModel().getState() == state)
-                .toList().size()
-                + "/" + executives.size();
-    }
-
-    public ExecutiveFractionsModel getExecutiveFractions() {
-        return new ExecutiveFractionsModel(
-                getExecutivesFraction(ExecutiveModel.ExecutiveState.IDLE),
-                getExecutivesFraction(ExecutiveModel.ExecutiveState.BUSY),
-                getExecutivesFraction(ExecutiveModel.ExecutiveState.TAKING_A_BREAK));
-    }
-
-    private String getAtmFraction(AtmModel.AtmState state) {
-        return atms.stream()
-                .filter(atmAgent -> atmAgent.getModel().getState() == state)
-                .toList().size()
-                + "/" + executives.size();
-    }
-
-    public AtmFractionsModel getAtmFractions() {
-        return new AtmFractionsModel(
-                getAtmFraction(AtmModel.AtmState.AVAILABLE),
-                getAtmFraction(AtmModel.AtmState.OCCUPIED),
-                getAtmFraction(AtmModel.AtmState.OUT_OF_ORDER));
-    }
 
     private String getClientFraction(ClientModel.ClientState state) {
-        return clients.stream()
+        return bank.getClients().stream()
                 .filter(clientAgent -> clientAgent.getModel().getState() == state)
                 .toList().size()
-                + "/" + executives.size();
+                + "/" + bank.getClients().size();
     }
 
     public ClientFractionsModel getClientFractions() {
@@ -90,4 +67,35 @@ public class GeneralStateTableModel {
                 getClientFraction(ClientModel.ClientState.EXITED));
     }
 
+    private String getAtmFraction(AtmModel.AtmState state) {
+        return bank.getAtms().stream()
+                .filter(atmAgent -> atmAgent.getModel().getState() == state)
+                .toList().size()
+                + "/" + bank.getAtms().size();
+    }
+
+    public AtmFractionsModel getAtmFractions() {
+        return new AtmFractionsModel(
+                getAtmFraction(AtmModel.AtmState.AVAILABLE),
+                getAtmFraction(AtmModel.AtmState.OCCUPIED),
+                getAtmFraction(AtmModel.AtmState.OUT_OF_ORDER));
+    }
+
+    private String getExecutivesFraction(ExecutiveModel.ExecutiveState state) {
+        return bank.getExecutives().stream()
+                .filter(executiveAgent -> executiveAgent.getModel().getState() == state)
+                .toList().size()
+                + "/" + bank.getExecutives().size();
+    }
+
+    public ExecutiveFractionsModel getExecutiveFractions() {
+        return new ExecutiveFractionsModel(
+                getExecutivesFraction(ExecutiveModel.ExecutiveState.IDLE),
+                getExecutivesFraction(ExecutiveModel.ExecutiveState.BUSY),
+                getExecutivesFraction(ExecutiveModel.ExecutiveState.TAKING_A_BREAK));
+    }
+    
+    public Bank getBank() {
+        return bank;
+    }
 }
