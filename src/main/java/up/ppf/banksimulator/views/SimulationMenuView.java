@@ -18,7 +18,7 @@ public final class SimulationMenuView extends JFrame {
     public SimulationMenuView() {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle(Main.TITLE);
-        setSize(400, 200);
+        setSize(600, 350);
 
         // INPUT PARAMETERS FOR SIMULATION
         var clientsLabel = new JLabel("Number of Clients:");
@@ -47,11 +47,29 @@ public final class SimulationMenuView extends JFrame {
 
         startButton = new JButton("Start Simulation");
 
-        setLayout(new BorderLayout());
+        var menuPanel = new JPanel();
+        menuPanel.setLayout(new BorderLayout());
 
-        add(panel, BorderLayout.CENTER);
-        add(startButton, BorderLayout.SOUTH);
+        menuPanel.add(panel, BorderLayout.CENTER);
+        menuPanel.add(startButton, BorderLayout.SOUTH);
 
+        var infoPanel = new JPanel(new GridLayout(1, 2));
+        infoPanel.add(new JLabel(new ImageIcon("UP.jpg")));
+        var text = new TextArea("""
+                ISGC
+                Fundamentos de Programación en Paralelo
+                Pablo Raschid Llamas Aun
+                Ángel Martínez Rodríguez
+                Luis Felipe Organista Méndez
+                Profesor: Dr. Juan Carlos López Pimentel
+                28/11/2023""");
+        text.setFont(new Font(Font.SERIF, Font.BOLD, 14));
+        text.setEditable(false);
+        infoPanel.add(text);
+
+        setLayout(new GridLayout(2, 1));
+        add(menuPanel);
+        add(infoPanel);
         setVisible(true);
     }
 
