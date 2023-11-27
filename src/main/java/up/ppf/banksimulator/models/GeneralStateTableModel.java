@@ -25,7 +25,7 @@ public class GeneralStateTableModel {
     private ArrayList<ClientAgent> createClients(int nClients) {
         var clients = new ArrayList<ClientAgent>();
         for (int i = 0; i < nClients; i++) {
-            clients.add(new ClientAgent(new ClientModel(ClientModel.ClientState.BANK_ENTRANCE)));
+            clients.add(new ClientAgent(bank, new ClientModel(ClientModel.ClientState.BANK_ENTRANCE)));
             clients.get(i).start();
         }
         return clients;
@@ -94,7 +94,7 @@ public class GeneralStateTableModel {
                 getExecutivesFraction(ExecutiveModel.ExecutiveState.BUSY),
                 getExecutivesFraction(ExecutiveModel.ExecutiveState.TAKING_A_BREAK));
     }
-    
+
     public Bank getBank() {
         return bank;
     }
