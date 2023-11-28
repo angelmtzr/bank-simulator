@@ -16,17 +16,29 @@ public class GeneralStateTableModel {
     private final Bank bank;
 
     public GeneralStateTableModel(GeneralStateTableParamsModel params) {
-        bank = new Bank(new Line(params.getAtmsLineSize()), new Line(params.getExecutivesLineSize()),
-                createClients(params.getClientsNumber()),
-                createAtms(params.getAtmsNumber()),
-                createExecutives(params.getExecutiveNumber()));
+        bank = new Bank(
+                new Line(params.getAtmsLineSize()),
+                new Line(params.getExecutivesLineSize()),
+                new ArrayList<ClientAgent>(),
+                new ArrayList<AtmAgent>(),
+                new ArrayList<ExecutiveAgent>()
+        );
+
+        bank.setClients(createClients(params.getClientsNumber()));
+        bank.setAtms(createAtms(params.getAtmsNumber()));
+        bank.setExecutives(createExecutives(params.getExecutiveNumber()));
+
+        bank.getClients().forEach(Thread::start);
+        bank.getAtms().forEach(Thread::start);
+        bank.getExecutives().forEach(Thread::start);
     }
+
 
     private ArrayList<ClientAgent> createClients(int nClients) {
         var clients = new ArrayList<ClientAgent>();
         for (int i = 0; i < nClients; i++) {
             clients.add(new ClientAgent(bank, new ClientModel(ClientModel.ClientState.BANK_ENTRANCE)));
-            clients.get(i).start();
+//            clients.get(i).start();
         }
         return clients;
     }
@@ -35,7 +47,7 @@ public class GeneralStateTableModel {
         var atms = new ArrayList<AtmAgent>();
         for (int i = 0; i < nAtms; i++) {
             atms.add(new AtmAgent(new AtmModel(AtmModel.AtmState.AVAILABLE)));
-            atms.get(i).start();
+//            atms.get(i).start();
         }
         return atms;
     }
@@ -44,7 +56,7 @@ public class GeneralStateTableModel {
         var executives = new ArrayList<ExecutiveAgent>();
         for (int i = 0; i < nExecutives; i++) {
             executives.add(new ExecutiveAgent(new ExecutiveModel(ExecutiveModel.ExecutiveState.IDLE)));
-            executives.get(i).start();
+//            executives.get(i).start();
         }
         return executives;
     }

@@ -22,15 +22,15 @@ public final class SimulationMenuView extends JFrame {
 
         // INPUT PARAMETERS FOR SIMULATION
         var clientsLabel = new JLabel("Number of Clients:");
-        clientsNumberField = new JTextField("5");
+        clientsNumberField = new JTextField("11");
         var executivesLabel = new JLabel("Number of Executives:");
-        executivesNumberField = new JTextField("5");
+        executivesNumberField = new JTextField("3");
         var atmsLabel = new JLabel("Number of ATMs:");
-        atmsNumberField = new JTextField("5");
+        atmsNumberField = new JTextField("2");
         var atmsLineLabel = new JLabel("ATMs line size:");
-        atmsLineField = new JTextField("10");
+        atmsLineField = new JTextField("5");
         var executivesLineLabel = new JLabel("Executives line size:");
-        executivesLineField = new JTextField("10");
+        executivesLineField = new JTextField("5");
 
         var panel = new JPanel(new GridLayout(5, 2));
 

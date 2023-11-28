@@ -1,9 +1,7 @@
 package up.ppf.banksimulator.agents;
 
 import up.ppf.banksimulator.Bank;
-import up.ppf.banksimulator.models.AtmModel;
 import up.ppf.banksimulator.models.ClientModel;
-import up.ppf.banksimulator.models.ExecutiveModel;
 
 import java.util.Random;
 
@@ -47,70 +45,70 @@ public class ClientAgent extends Thread {
                 ClientModel.ClientState.ATM,
                 ClientModel.ClientState.EXECUTIVE
         };
-        goToSleep(4000); // Time to decide action
+        goToSleep(5000); // Time to decide action
         return states[rand.nextInt(states.length)];
     }
 
 
     public void atm() {
-        bank.getAtmLine().enter();
+        if (bank.getAtmLine().couldNotEnter()) {
+            return; // If no room in line, leave
+        }
+        // ATM LINE ------------------------
         model.setState(ClientModel.ClientState.ATM_LINE);
-        goToSleep(3000);
+        goToSleep(5000);
+        AtmAgent atm;
+        while (true) {
+            goToSleep(1500);
+            atm = bank.getAvailableAtm();
+            if (atm == null)
+                continue;
+            if (atm.entered(this))
+                break;
+        }
         bank.getAtmLine().leave();
-//         TODO: Assign atm
-        var atm = bank.getAtms().stream()
-                .filter(atmAgent -> atmAgent.getModel().getState() == AtmModel.AtmState.AVAILABLE)
-                .findFirst()
-                .orElse(null);
-        setCurrentService(true, atm, null);
-        assert atm != null;
-        atm.setCurrentClient(this);
+        // ATM ------------------------
         model.setState(ClientModel.ClientState.ATM);
-        // TODO: Model when with atm
-        goToSleep(1000);
-        //When exiting current client is set to null
-        setCurrentService(false, null, null);
-        atm.setCurrentClient(null);
-        model.setState(ClientModel.ClientState.EXITED);
-
+        currentAtm = atm;
+        goToSleep(7000);
+        atm.leave();
+        // ATM LINE ------------------------
+        currentAtm = null;
     }
 
     public void executive() {
-        bank.getExecutiveLine().enter();
+        if (bank.getExecutiveLine().couldNotEnter()) {
+            return; // If no room in line, leave
+        }
+        // EXECUTIVE LINE ------------------------
         model.setState(ClientModel.ClientState.EXECUTIVE_LINE);
-        goToSleep(3000);
+        goToSleep(5000);
+        ExecutiveAgent executive;
+        while (true) {
+            goToSleep(1500);
+            executive = bank.getAvailableExecutive();
+            if (executive == null)
+                continue;
+            if (executive.entered(this))
+                break;
+        }
         bank.getExecutiveLine().leave();
-//         TODO: Assign Executive
-        var executive = bank.getExecutives().stream()
-                .filter(executiveAgent -> executiveAgent.getModel().getState() == ExecutiveModel.ExecutiveState.IDLE)
-                .findFirst()
-                .orElse(null);
-        setCurrentService(true, null, executive);
-        assert executive != null;
-        executive.setCurrentClient(this);
+        // EXECUTIVE ------------------------
+        currentExecutive = executive;
         model.setState(ClientModel.ClientState.EXECUTIVE);
-        // TODO: Model when with executive
-        goToSleep(1000);
-        //When exiting current client is set to null
-        setCurrentService(false, null, null);
-        executive.setCurrentClient(null);
-        model.setState(ClientModel.ClientState.EXITED);
-
+        goToSleep(7000);
+        executive.leave();
+        currentExecutive = null;
     }
-
 
     @Override
     public void run() {
-//        while (model.getState() != ClientModel.ClientState.EXITED) {
-        while (true) {
-            goToSleep(2000);
-            model.setState(ClientModel.ClientState.random());
+        switch (getActionDecision()) {
+            case ATM -> atm();
+            case EXECUTIVE -> executive();
         }
-//        switch (getActionDecision()) {
-//            case ATM -> atm();
-//            case EXECUTIVE -> executive();
-//        }
-
+//        goToSleep(3000);
+        model.setState(ClientModel.ClientState.EXITED);
     }
 
     private void setCurrentService(boolean set, AtmAgent atm, ExecutiveAgent executive) {

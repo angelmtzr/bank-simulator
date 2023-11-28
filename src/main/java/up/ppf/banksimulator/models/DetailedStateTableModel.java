@@ -17,7 +17,8 @@ public class DetailedStateTableModel {
     public ClientAgent getClient(int id) {
         return bank.getClients().stream()
                 .filter(clientAgent -> clientAgent.getName().equals("Client " + id))
-                .findFirst().get();
+                .findFirst()
+                .orElse(null);
 
     }
 

@@ -5,7 +5,7 @@ public class AtmFractionsModel {
     private String availableFraction;
     private String outOfOrderFraction;
 
-    public AtmFractionsModel(String occupiedFraction, String availableFraction, String outOfOrderFraction) {
+    public AtmFractionsModel(String availableFraction, String occupiedFraction, String outOfOrderFraction) {
         this.occupiedFraction = occupiedFraction;
         this.availableFraction = availableFraction;
         this.outOfOrderFraction = outOfOrderFraction;

@@ -31,23 +31,31 @@ public final class DetailedStateTableView extends JFrame {
 
 
     public void setClientStateRow(ClientAgent client) {
-        var id = Integer.parseInt(client.getName().replaceAll("\\D", "")) - 1;
-        detailedTableModel.setValueAt(client.getName(), id, 0);
-        setValueDefault(id);
-        var col = client.getModel().getState().getValue();
-        if (col == 4 || col == 5) {
-            switch (col) {
-                case 4:
-                    detailedTableModel.setValueAt(client.getCurrentAtm().getName(), id, col);
-                    break;
-                case 5:
-                    detailedTableModel.setValueAt(client.getCurrentExecutive().getName(), id, col);
-                    break;
+        var clientRowId = Integer.parseInt(client.getName().replaceAll("\\D", "")) - 1;
+        detailedTableModel.setValueAt(client.getName(), clientRowId, 0);
+        setValueDefault(clientRowId);
+        var stateCol = client.getModel().getState().getValue();
+//        detailedTableModel.setValueAt(client.);
+//        if (col == 4 || col == 5) {
+//            switch (col) {
+//                case 4 -> detailedTableModel.setValueAt(client.getCurrentAtm().getName(), id, col);
+//                case 5 -> detailedTableModel.setValueAt(client.getCurrentExecutive().getName(), id, col);
+//            }
+//        }
+//        else {
+//            detailedTableModel.setValueAt("X", id, col);
+//        }
+        switch (client.getModel().getState()) {
+            case ATM -> {
+                var atmName = client.getCurrentAtm() == null ? "Exiting" : client.getCurrentAtm().getName();
+                detailedTableModel.setValueAt(atmName, clientRowId, stateCol);
             }
-
+            case EXECUTIVE -> {
+                var exName = client.getCurrentExecutive() == null ? "Exiting" : client.getCurrentExecutive().getName();
+                detailedTableModel.setValueAt(exName, clientRowId, stateCol);
+            }
+            default -> detailedTableModel.setValueAt("X", clientRowId, stateCol);
         }
-        detailedTableModel.setValueAt(client.getModel().getState(), id, col);
-
     }
 
     private void setValueDefault(int index) {

@@ -9,12 +9,8 @@ public class Line {
         available = new Semaphore(capacity, true);
     }
 
-    public void enter() {
-        try {
-            available.acquire();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+    public boolean couldNotEnter() {
+        return !available.tryAcquire();
     }
 
     public void leave() {

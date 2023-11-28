@@ -15,7 +15,6 @@ public final class SimulationMenuController {
                         view.getParams().getAtmsLineSize(),
                         view.getParams().getExecutivesLineSize());
                 SwingUtilities.invokeLater(() -> new GeneralStateTableController(stateView, stateModel));
-
             } catch (NumberFormatException ex) {
                 view.displayErrorMessage("Invalid input. Please enter valid numbers.");
             }
