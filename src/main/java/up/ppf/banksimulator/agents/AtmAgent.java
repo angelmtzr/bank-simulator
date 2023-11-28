@@ -5,9 +5,11 @@ import up.ppf.banksimulator.models.AtmModel;
 public class AtmAgent extends Thread {
     private final AtmModel model;
     private ClientAgent currentClient;
+    private static int idClient = 1;
     private int counter;
 
     public AtmAgent(AtmModel model) {
+        super("Atm  " + idClient++);
         this.model = model;
         this.currentClient = null;
         this.counter = 0;

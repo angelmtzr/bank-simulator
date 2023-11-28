@@ -5,9 +5,11 @@ import up.ppf.banksimulator.models.ExecutiveModel;
 public class ExecutiveAgent extends Thread {
     private final ExecutiveModel model;
     private ClientAgent currentClient;
+    private static int idClient = 1;
     private int counter;
 
     public ExecutiveAgent(ExecutiveModel model) {
+        super("Executive " + idClient++);
         this.model = model;
         this.currentClient = null;
         this.counter = 0;
